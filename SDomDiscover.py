@@ -21,12 +21,12 @@ class c:
     UNDERLINE = '\033[4m'
 
 def ctrl_c(sig, frame):
-    sys.exit(c.RED + "[!] Interrupt handler received, exiting..." + c.END)
+    sys.exit(f"{c.RED}[!] Interrupt handler received, exiting...{c.END}")
 
 signal.signal(signal.SIGINT, ctrl_c)
 
 def banner():
-    print(c.YELLOW + '                _____                   ')
+    print(f'{c.YELLOW}                _____                   ')
     print('             .-"     "-.                ')
     print('            / o       o \               ')
     print('           /   \     /   \              ')
@@ -92,16 +92,26 @@ def axfr(domain):
     sleep(0.5)
     ns_answer = dns.resolver.resolve(domain, 'NS')
     for server in ns_answer:
-        print(c.YELLOW + "[*] Found NS: {}".format(server) + c.END)
+        print(c.YELLOW + f"[*] Found NS: {server}" + c.END)
         ip_answer = dns.resolver.resolve(server.target, 'A')
         for ip in ip_answer:
-            print(c.YELLOW + "[*] IP for {} is {}".format(server, ip) + c.END)
+            print(c.YELLOW + f"[*] IP for {server} is {ip}" + c.END)
             try:
                 zone = dns.zone.from_xfr(dns.query.xfr(str(ip), domain))
                 for host in zone:
-                    print(c.YELLOW + "[" + c.END + c.GREEN + "+" + c.END + c.YELLOW + "] Found Host: {}".format(host) + c.END)
+                    print(
+                        f"{c.YELLOW}[{c.END}{c.GREEN}+{c.END}{c.YELLOW}"
+                        + f"] Found Host: {host}"
+                        + c.END
+                    )
+
             except Exception as e:
-                print(c.YELLOW + "[" + c.END + c.RED + "-" + c.END + c.YELLOW + "] NS {} refused zone transfer!".format(server) + c.END)
+                print(
+                    f"{c.YELLOW}[{c.END}{c.RED}-{c.END}{c.YELLOW}"
+                    + f"] NS {server} refused zone transfer!"
+                    + c.END
+                )
+
                 continue
 
 def SDom(domain,filename):
@@ -109,7 +119,7 @@ def SDom(domain,filename):
     print(c.BLUE + "\n[" + c.END + c.GREEN + "+" + c.END + c.BLUE + "] Discovering valid subdomains...\n" + c.END)
     sleep(0.5)
 
-    r = requests.get("https://crt.sh/?q=" + domain + "&output=json", timeout=20)
+    r = requests.get(f"https://crt.sh/?q={domain}&output=json", timeout=20)
     formatted_json = json.dumps(json.loads(r.text), indent=4)
     domains = re.findall(r'"common_name": "(.*?)"', formatted_json)
 
@@ -118,31 +128,31 @@ def SDom(domain,filename):
     if filename != None:
         f = open(filename, "a")
 
-    print(c.YELLOW + "+" + "-"*39 + "+")
+    print(f"{c.YELLOW}+" + "-"*39 + "+")
     for value in doms:
         if not value.startswith('*' + "." + domain):
 
             if len(value) >= 10 and len(value) <= 14:
                 l = len(value)
-                print("| " + value + "    \t\t\t|")
+                print(f"| {value}" + "    \t\t\t|")
                 if filename != None:
                     f.write(value + "\n")
 
             if len(value) >= 15 and len(value) <= 19:
                 l = len(value)
-                print("| " + value + "\t\t\t|")
+                print(f"| {value}" + "\t\t\t|")
                 if filename != None:
                     f.write(value + "\n")
 
             if len(value) >= 20 and len(value) <= 24:
                 l = len(value)
-                print("| " + value + "   \t\t|")
+                print(f"| {value}" + "   \t\t|")
                 if filename != None:
                     f.write(value + "\n")
 
             if len(value) >= 25 and len(value) <= 29:
                 l = len(value)
-                print("| " + value + "\t\t|")
+                print(f"| {value}" + "\t\t|")
                 if filename != None:
                     f.write(value + "\n")
 
