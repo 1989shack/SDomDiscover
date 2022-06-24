@@ -1,0 +1,5 @@
+requests
+pydig
+dnspython
+signal
+argparse
