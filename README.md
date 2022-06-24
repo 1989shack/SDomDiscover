@@ -1,6 +1,6 @@
 # SDomDiscover
 
-A easy-to-use python tool to perform dns recon with multiple options
+`A easy-to-use python tool to perform dns recon with multiple options`
 
 ## ⭕ Installation:
 It can be installed in any OS with python3
